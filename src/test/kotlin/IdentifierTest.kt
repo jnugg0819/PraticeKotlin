@@ -1,4 +1,4 @@
-import com.olio.gym.fit.Identifier
+import com.olio.gym.fit.syntax.Identifier
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

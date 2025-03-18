@@ -1,4 +1,4 @@
-package com.olio.gym.fit
+package com.olio.gym.fit.syntax
 
 class Identifier {
 
