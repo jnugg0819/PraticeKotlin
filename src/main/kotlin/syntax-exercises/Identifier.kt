@@ -4,38 +4,36 @@ class Identifier {
 
     private val namesAndIdentifiers = "홍길동,1234-5678,이순신,8765-4321,홍길동,1234-5678,아이유,3333-4444"
 
-    fun getIdentifierCount(name: String): Int {
+    private val listOfIdentifiers: List<String> by lazy {
+        // , 형식이 깨진경우를 대비.
+        namesAndIdentifiers.split(",").filter { it.isNotBlank() }
+    }
 
-        val listOfIdentifiers = namesAndIdentifiers.split(",")
+    private val namesList: List<String> by lazy {
+        listOfIdentifiers.filterIndexed { index, _ -> index % 2 == 0 }
+    }
 
-        val mapIdentifiers = mutableMapOf<String, MutableList<String>>()
+    private val identifierList: List<String> by lazy {
+        listOfIdentifiers.filterIndexed { index, _ -> index % 2 == 1 }
+    }
 
-        val namesList = listOfIdentifiers.filterIndexed { index, _ -> index % 2 == 0 }
-        val identifierList = listOfIdentifiers.filterIndexed { index, _ -> index % 2 == 1 }
+    private val mapIdentifiers: Map<String, Set<String>> by lazy {
 
-        namesList.forEachIndexed { index, s ->
-//              1. 첫번째 내가 생각하던 구상.
-//            val valueList: MutableList<String>
-//
-//            if(mapIdentifiers[s].isNullOrEmpty()) {
-//                valueList = mutableListOf()
-//                valueList.add(identifierList[index])
-//                mapIdentifiers[s] = valueList
-//            } else {
-//                mapIdentifiers[s]?.add(identifierList[index])
-//            }
-
-            // 2. 업그레이드된 구상.
-//            val valueList = mapIdentifiers[s] ?: mutableListOf<String>().also { mapIdentifiers[s] = it }
-//            valueList.add(identifierList[index])
-
-
-            // 3. 최종적으로 찾아본 최적 구상.
-            mapIdentifiers.computeIfAbsent(s) { mutableListOf() }.add(identifierList[index])
+        // 두개의 리스트가 사이즈가 맞지않으면 예외를 던짐.
+        if (namesList.size != identifierList.size) {
+            throw IllegalArgumentException("잘못된 데이터 형식: 이름과 식별자의 개수가 맞지 않습니다.")
         }
 
-        println("${mapIdentifiers[name]?.size} ${mapIdentifiers} ${mapIdentifiers[name]?.distinct()}")
+        namesList.zip(identifierList)
+            .groupBy({ it.first }, { it.second })
+            .mapValues { it.value.toSet() }
+    }
 
-        return mapIdentifiers[name]?.distinct()?.size ?: 0
+    fun getIdentifierCount(name: String): Int {
+        return mapIdentifiers[name]?.size ?: 0
+    }
+
+    fun getAllNames(): List<String> {
+        return namesList
     }
 }
