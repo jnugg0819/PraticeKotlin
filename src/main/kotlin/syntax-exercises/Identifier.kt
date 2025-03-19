@@ -1,25 +1,22 @@
-package com.olio.gym.fit.syntax
+class Identifier(private val namesAndIdentifiers: String) {
 
-class Identifier {
-
-    private val namesAndIdentifiers = "홍길동,1234-5678,이순신,8765-4321,홍길동,1234-5678,아이유,3333-4444"
-
-    private val listOfIdentifiers: List<String> by lazy {
-        // , 형식이 깨진경우를 대비.
+    val listOfIdentifiers: List<String> by lazy {
         namesAndIdentifiers.split(",").filter { it.isNotBlank() }
     }
 
-    private val namesList: List<String> by lazy {
-        listOfIdentifiers.filterIndexed { index, _ -> index % 2 == 0 }
+    val namesList: List<String> by lazy {
+        listOfIdentifiers.filterIndexed { index, value ->
+            index % 2 == 0 && value.matches(Regex("^[가-힣a-zA-Z]+$"))
+        }
     }
 
-    private val identifierList: List<String> by lazy {
-        listOfIdentifiers.filterIndexed { index, _ -> index % 2 == 1 }
+    val identifierList: List<String> by lazy {
+        listOfIdentifiers.filterIndexed { index, value ->
+            index % 2 == 1 && value.matches(Regex("^\\d{3,4}-\\d{3,4}$"))
+        }
     }
 
-    private val mapIdentifiers: Map<String, Set<String>> by lazy {
-
-        // 두개의 리스트가 사이즈가 맞지않으면 예외를 던짐.
+    val mapIdentifiers: Map<String, Set<String>> by lazy {
         if (namesList.size != identifierList.size) {
             throw IllegalArgumentException("잘못된 데이터 형식: 이름과 식별자의 개수가 맞지 않습니다.")
         }
@@ -27,6 +24,10 @@ class Identifier {
         namesList.zip(identifierList)
             .groupBy({ it.first }, { it.second })
             .mapValues { it.value.toSet() }
+    }
+
+    fun getIdentifiers(name: String): Set<String> {
+        return mapIdentifiers[name] ?: emptySet()
     }
 
     fun getIdentifierCount(name: String): Int {
