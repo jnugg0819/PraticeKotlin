@@ -16,7 +16,7 @@ class OrderTest {
         println("✅ TEST START: Checking '주문 목록 리스트'")
         println(" - Expected : [노트북, 마우스, 키보드] Actual: $productList")
 
-        assertEquals(setOf("노트북", "마우스", "키보드", "노트북"), productList)
+        assertEquals(setOf("노트북", "마우스", "키보드"), productList)
     }
 
     @Test
@@ -52,10 +52,13 @@ class OrderTest {
     }
 
     @Test
-    fun `잘못된 형식의 주문양식 포맷이 들어가면 예외를 던진다` () {
-        assertThrows<IllegalArgumentException> {
-           Order(" 노트북,1500000;마우스,25000,3;키보드,75000,1;노트북,1500000,1")
+    fun `잘못된 형식의 주문양식 포맷이 들어가면 예외를 던진다`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            Order(" 노트북,1500000;마우스,25000,3;키보드,75000,1;노트북,1500000,1")
         }
+
+        println("✅ TEST START: 잘못된 주문 양식")
+        assertEquals("Invalid order format", exception.message)
     }
 
 }
