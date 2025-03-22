@@ -23,28 +23,20 @@ fun isPalindromeForInteger(x: Int): Boolean {
         return false // 음수일때는 앞뒤가 같을 수가 없다.
     }
 
-    var quotient = x / 10
-    var remainder = x % 10
+    if( x in 0..9) return true
 
-
-    val remainderList = ArrayList<Int>()
-    remainderList.add(remainder)
+    val remainderList = mutableListOf<Int>()
+    var number = x
 
     // 10으로 나눈 몫과, 나머지를 계산하여 리스트에 넣어준다. 그러면 각 자릿수에대한 숫자를 구할 수 있다.
-    while (quotient != 0) {
-        remainder = quotient % 10
-        quotient /= 10
-        remainderList.add(remainder)
+    while (number > 0) {
+        remainderList.add(number % 10)
+        number /= 10
     }
 
-    var i = 0
-    var j = remainderList.size - 1
-
-    while (i < j) {
-        if (remainderList[i] == remainderList[j]) {
-            i++
-            j--
-        } else {
+    val size = remainderList.size
+    for (i in 0 until size / 2) {
+        if (remainderList[i] != remainderList[size - i - 1]) {
             return false
         }
     }
