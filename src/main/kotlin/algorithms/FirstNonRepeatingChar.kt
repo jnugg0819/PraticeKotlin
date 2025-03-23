@@ -2,28 +2,22 @@ package com.olio.gym.fit.algorithms
 
 fun firstNonRepeatingChar(input: String): Char? {
 
-    val storedCharMap = mutableMapOf<Int, CharacterCount>()
-    var countForIndex = 0
+    if(input.isEmpty()) return null
 
-    for (i in input.indices) {
+    val charMap = mutableMapOf<Char, Int>()
 
-        val index = storedCharMap.values.indexOfFirst { it.character == input[i] }
+    for (char in input) {
+        charMap[char] = (charMap[char] ?: 0) + 1
+    }
 
-        if (index != -1) {
-            storedCharMap[index]!!.count += 1
-        } else {
-            storedCharMap[countForIndex] = CharacterCount(input[i], 1)
-            countForIndex++
+    var resultChar : Char? = null
+
+    for (entry in charMap) {
+        if (entry.value == 1) {
+            resultChar = entry.key
+            break
         }
     }
 
-    val filteredList = storedCharMap.filter { it.value.count <= 1 }.toMap()
-
-    return if (filteredList.isEmpty()) {
-        null
-    } else {
-        filteredList.entries.first().value.character
-    }
+    return resultChar
 }
-
-data class CharacterCount(val character: Char, var count: Int = 1)
