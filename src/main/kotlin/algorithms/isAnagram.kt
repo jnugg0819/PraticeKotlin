@@ -20,3 +20,16 @@ fun isAnagram(a: String, b: String): Boolean {
 
     return mapOfChar.all { it.value == 0 }
 }
+
+fun groupAnagrams(strs: List<String>): List<List<String>> {
+    val grouped = strs.groupBy { getCharFrequencyKey(it) }
+    return grouped.values.toList()
+}
+
+fun getCharFrequencyKey(word: String): String {
+    val counts = IntArray(26)
+    for (c in word) {
+        counts[c - 'a']++
+    }
+    return counts.joinToString("#")
+}
