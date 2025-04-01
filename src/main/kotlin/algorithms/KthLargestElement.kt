@@ -9,15 +9,9 @@ fun findKthLargest(numbs: IntArray, k: Int): Int {
         maxHeap.add(num)
     }
 
-    var resultK = 0
-
-    while (maxHeap.isNotEmpty()) {
-        val value = maxHeap.poll()
-        resultK++
-        if(value == k) {
-            return resultK
-        }
+    repeat(k - 1) {
+        maxHeap.poll()
     }
 
-    return resultK
+    return maxHeap.poll()
 }
